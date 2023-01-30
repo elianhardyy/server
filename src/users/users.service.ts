@@ -57,9 +57,14 @@ export class UsersService {
     return null;
   }
   public async login(user: UsersValidator, res: any) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      firstname: user.firstname,
+    };
     const token = this.jwtService.sign(payload);
-    return res.json({ token });
+    res.cookie('jwt', token, { httpOnly: true });
+    return res.json({ jwt: token });
   }
   public async logout(req: any) {
     if (req.user) {
@@ -77,9 +82,12 @@ export class UsersService {
       });
     }
   }
-  public async dashboard(req: any) {
+  public async dashboard(req: Request) {
+    const cookie = req.cookies['jwt'];
+    console.log(cookie);
+    const data = this.jwtService.verify(cookie);
     const user = await this.usersRepository.findOne({
-      where: { id: req.user.id },
+      where: { email: data.email },
     });
     return user;
   }

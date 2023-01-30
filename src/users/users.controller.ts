@@ -45,10 +45,9 @@ export class UsersController {
   }
 
   @UseGuards(RolesGuard, JwtAuthGuard)
-  @Roles(Role.User)
   @HttpCode(HttpStatus.OK)
-  @Get('/user')
-  public user(@Request() req): any {
+  @Get('/dashboard')
+  public dashboard(@Request() req): any {
     return this.userService.dashboard(req);
   }
 
@@ -57,6 +56,13 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @Get('/admin')
   public admin(@Request() req): any {
+    return this.userService.dashboard(req);
+  }
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @Roles(Role.User)
+  @HttpCode(HttpStatus.OK)
+  @Get('/user')
+  public user(@Request() req): any {
     return this.userService.dashboard(req);
   }
 
