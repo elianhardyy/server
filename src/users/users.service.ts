@@ -32,19 +32,7 @@ export class UsersService {
     pwupdate.password = password;
     return await this.usersRepository.save(pwupdate);
   }
-  public async validate(login: LoginValidator): Promise<Users> {
-    // const { email, password } = login;
-    const user = await this.usersRepository.findOne({
-      where: { email: login.email },
-    });
-    const check = await bcrypt.compare(login.password, user.password);
-    if (user && check) {
-      user.is_active = true;
-      this.usersRepository.save(user);
-      return user;
-    }
-    return null;
-  }
+  //LocalAuthGuard
   public async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersRepository.findOne({ where: { email } });
     const passwordcheck = await bcrypt.compare(password, user.password);
@@ -56,6 +44,8 @@ export class UsersService {
     }
     return null;
   }
+
+  //JwtAuthGuard
   public async login(user: UsersValidator, res: any) {
     const payload = {
       email: user.email,
@@ -82,12 +72,12 @@ export class UsersService {
       });
     }
   }
-  public async dashboard(req: Request) {
-    const cookie = req.cookies['jwt'];
-    console.log(cookie);
-    const data = this.jwtService.verify(cookie);
+  public async dashboard(req: any) {
+    // const cookie = req.cookies['jwt'];
+    // console.log(cookie);
+    // const data: any = this.jwtService.decode(cookie);
     const user = await this.usersRepository.findOne({
-      where: { email: data.email },
+      where: { email: req.user.email },
     });
     return user;
   }

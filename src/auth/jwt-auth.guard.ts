@@ -9,8 +9,8 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest().headers;
+    const request = context.switchToHttp().getRequest().headers.cookie;
     // console.log(request.cookie);
-    return request.cookie;
+    return request;
   }
 }

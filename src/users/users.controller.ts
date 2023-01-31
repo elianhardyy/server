@@ -44,7 +44,7 @@ export class UsersController {
     return req.user;
   }
 
-  @UseGuards(RolesGuard, JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get('/dashboard')
   public dashboard(@Request() req): any {
