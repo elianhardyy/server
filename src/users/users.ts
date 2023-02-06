@@ -8,11 +8,14 @@ import {
   UpdateDateColumn,
   PrimaryColumn,
   Generated,
+  OneToOne,
 } from 'typeorm';
 import { Role } from 'src/roles/role.enum';
+import { Profile } from './profile';
 @Entity('users')
 export class Users {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ type: 'uuid' })
+  @Generated('uuid')
   public id: string;
 
   @Column()
@@ -40,4 +43,7 @@ export class Users {
 
   @Column({ type: 'enum', enum: Role, default: Role.User })
   public roles: Role[];
+
+  @OneToOne(() => Profile, (profile) => profile.users)
+  public profile: Profile;
 }

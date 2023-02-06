@@ -10,7 +10,6 @@ export class ProfilesService {
   ) {}
   public async add(user: any, photo: any) {
     const profiles: Profile = new Profile();
-
     profiles.users = user;
     profiles.photo = photo;
     const newProfile = this.profileRepository.create(profiles);

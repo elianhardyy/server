@@ -1,16 +1,19 @@
 import {
   Column,
   Entity,
+  Generated,
   JoinColumn,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Users } from './users';
 
 @Entity('profiles')
 export class Profile {
-  @PrimaryGeneratedColumn()
-  public id: number;
+  @PrimaryColumn({ type: 'uuid' })
+  @Generated('uuid')
+  public id: string;
 
   @Column()
   public photo: string;

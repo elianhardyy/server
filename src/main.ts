@@ -17,7 +17,7 @@ async function bootstrap() {
     credentials: true,
     methods: ['GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'],
   });
-  app.useGlobalPipes(new ValidationPipe({ forbidUnknownValues: false }));
+  app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
   app.use(passport.initialize());
   app.useGlobalFilters(new CsrfFilter());

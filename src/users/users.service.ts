@@ -27,6 +27,12 @@ export class UsersService {
   public async findOne(data: any) {
     return this.usersRepository.findOne({ where: { email: data } });
   }
+  public async getByName(firstname: string) {
+    const userId = await this.usersRepository.findOne({
+      where: { firstname: firstname },
+    });
+    return userId;
+  }
   public async update(email: string, password: any): Promise<any> {
     const pwupdate = await this.usersRepository.findOne({ where: { email } });
     pwupdate.password = password;
@@ -57,20 +63,18 @@ export class UsersService {
     return res.json({ jwt: token });
   }
   public async logout(req: any) {
-    if (req.user) {
-      const user = await this.usersRepository.findOne({
-        where: { email: req.user.email },
-      });
-      user.is_active = false;
-      this.usersRepository.save(user);
-      req.session.destroy((err: Error) => {
-        if (err) {
-          return err.message;
-        } else {
-          return { msg: 'logged out' };
-        }
-      });
-    }
+    const user = await this.usersRepository.findOne({
+      where: { email: req.user.email },
+    });
+    user.is_active = false;
+    this.usersRepository.save(user);
+    req.session.destroy((err: Error) => {
+      if (err) {
+        return err.message;
+      } else {
+        return { msg: 'logged out' };
+      }
+    });
   }
   public async dashboard(req: any) {
     // const cookie = req.cookies['jwt'];
@@ -78,6 +82,7 @@ export class UsersService {
     // const data: any = this.jwtService.decode(cookie);
     const user = await this.usersRepository.findOne({
       where: { email: req.user.email },
+      relations: { profile: true },
     });
     return user;
   }

@@ -18,7 +18,7 @@ import { UsersService } from './users.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { Roles } from '../roles/roles.decorator';
 import { Role } from '../roles/role.enum';
-import { HttpCode, Next } from '@nestjs/common/decorators';
+import { HttpCode, Next, Param } from '@nestjs/common/decorators';
 import { HttpStatus } from '@nestjs/common/enums';
 import { Response } from 'express';
 @Controller('users')
@@ -39,27 +39,25 @@ export class UsersController {
   //user authenticated
 
   @UseGuards(JwtAuthGuard)
-  @Post('/verify')
-  public verify(@Request() req): any {
-    return req.user;
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
   @Get('/dashboard')
   public dashboard(@Request() req): any {
     return this.userService.dashboard(req);
   }
+  @UseGuards(JwtAuthGuard)
+  @Get('/profile/:name')
+  public username(@Param('name') name: string): any {
+    return this.userService.getByName(name);
+  }
 
-  @UseGuards(RolesGuard, JwtAuthGuard)
   @Roles(Role.Admin)
+  @UseGuards(RolesGuard, JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get('/admin')
   public admin(@Request() req): any {
     return this.userService.dashboard(req);
   }
-  @UseGuards(RolesGuard, JwtAuthGuard)
   @Roles(Role.User)
+  @UseGuards(RolesGuard, JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get('/user')
   public user(@Request() req): any {
@@ -74,7 +72,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Get('/logout')
+  @Post('/logout')
   public logout(@Request() req) {
     return this.userService.logout(req);
   }

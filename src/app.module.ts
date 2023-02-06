@@ -12,6 +12,10 @@ import { Password } from './password/password';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Profile } from './users/profile';
 import { MulterModule } from '@nestjs/platform-express/multer';
+import { PostsModule } from './posts/posts.module';
+import { Post } from './posts/posts';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 @Module({
   imports: [
     UsersModule,
@@ -26,11 +30,17 @@ import { MulterModule } from '@nestjs/platform-express/multer';
         host: env.get<string>('DATABASE_HOST'),
         port: parseInt(env.get<string>('DATABASE_PORT')),
         username: env.get<string>('DATABASE_USER'),
+        password: env.get<string>('DATABASE_PASSWORD'),
         database: env.get<string>('DATABASE_NAME'),
-        entities: [Users, Password, Profile],
+        entities: [Users, Password, Profile, Post],
         synchronize: true,
+        dropSchema: true,
       }),
       inject: [ConfigService],
+    }),
+    PostsModule,
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'public'),
     }),
   ],
   controllers: [AppController],

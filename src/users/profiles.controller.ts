@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config/dist';
 import { JwtAuthGuard } from './../auth/jwt-auth.guard';
 import { AuthenticatedGuard } from './../auth/authenticated.guard';
 import {
@@ -15,17 +16,19 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
-import { Request } from 'express';
+import * as process from 'process';
 @Controller('profiles')
 export class ProfilesController {
-  constructor(private readonly profileService: ProfilesService) {}
-
+  constructor(
+    private readonly profileService: ProfilesService, //public envi: ConfigService,
+  ) {}
+  //public env = this.envi;
   @UseGuards(JwtAuthGuard)
   @Post('/photo')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './uploads',
+        destination: './public/profile',
         filename: (req, file, callback) => {
           const unique = uuidv4();
           const ext: string = extname(file.originalname);
