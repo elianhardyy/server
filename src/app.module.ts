@@ -13,15 +13,17 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Profile } from './users/profile';
 import { MulterModule } from '@nestjs/platform-express/multer';
 import { PostsModule } from './posts/posts.module';
-import { Post } from './posts/posts';
+import { Posts } from './posts/posts';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
+import { Comments } from './posts/comments';
+import { Follows } from './users/follows';
 @Module({
   imports: [
     UsersModule,
     OauthlurModule,
     PasswordModule,
-    MulterModule.register({ dest: './uploads' }),
+    MulterModule.register({ dest: './public' }),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -32,16 +34,15 @@ import * as path from 'path';
         username: env.get<string>('DATABASE_USER'),
         password: env.get<string>('DATABASE_PASSWORD'),
         database: env.get<string>('DATABASE_NAME'),
-        entities: [Users, Password, Profile, Post],
+        entities: [Users, Password, Profile, Posts, Comments, Follows],
         synchronize: true,
-        dropSchema: true,
       }),
       inject: [ConfigService],
     }),
     PostsModule,
-    ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '..', 'public'),
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: path.join(__dirname, '..', 'public'),
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService],

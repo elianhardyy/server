@@ -1,3 +1,4 @@
+import { Posts } from './../posts/posts';
 import { UsersValidator } from '../validator/user.validator';
 import {
   Entity,
@@ -9,20 +10,25 @@ import {
   PrimaryColumn,
   Generated,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
+import { Comments } from '../posts/comments';
 import { Role } from 'src/roles/role.enum';
 import { Profile } from './profile';
+import { Follows } from './follows';
 @Entity('users')
 export class Users {
-  @PrimaryColumn({ type: 'uuid' })
-  @Generated('uuid')
-  public id: string;
+  @PrimaryGeneratedColumn()
+  public id: number;
 
   @Column()
   public firstname: string;
 
   @Column()
   public lastname: string;
+
+  @Column()
+  public username: string;
 
   @Column({ unique: true })
   public email: string;
@@ -46,4 +52,16 @@ export class Users {
 
   @OneToOne(() => Profile, (profile) => profile.users)
   public profile: Profile;
+
+  @OneToMany(() => Posts, (post) => post.users)
+  public posts: Posts[];
+
+  @OneToMany(() => Comments, (comment) => comment.post)
+  public comment: Comments[];
+
+  @OneToMany(() => Follows, (comment) => comment.follower)
+  public follower: string;
+
+  @OneToMany(() => Follows, (comment) => comment.followed)
+  public followed: string;
 }

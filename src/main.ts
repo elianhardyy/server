@@ -9,14 +9,17 @@ import * as process from 'process';
 import * as csurf from 'csurf';
 import * as cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
-
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import * as express from 'express';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
     origin: 'http://localhost:3000',
     credentials: true,
     methods: ['GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'],
   });
+  app.use('/public', express.static('public'));
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
   app.use(passport.initialize());

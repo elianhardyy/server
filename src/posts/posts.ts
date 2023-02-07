@@ -1,7 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Users } from './../users/users';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  RelationCount,
+} from 'typeorm';
+import { Comments } from './comments';
 
 @Entity('posts')
-export class Post {
+export class Posts {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -14,17 +27,31 @@ export class Post {
   @Column({ nullable: true })
   public video: string;
 
-  @Column({ type: 'simple-array', nullable: true })
-  public like: string[];
+  @ManyToMany(() => Users, { cascade: true })
+  @JoinTable()
+  public like: Users[];
 
-  @Column({ type: 'simple-array', nullable: true })
-  public dislike: string[];
+  @ManyToMany(() => Users, { cascade: true })
+  @JoinTable()
+  public dislike: Users[];
 
-  @Column({ type: 'simple-json', nullable: true })
-  public comments: {
-    user: number;
-    username: string;
-    profile: string;
-    comment: string;
-  };
+  @RelationCount((post: Posts) => post.like)
+  public likeCount: number;
+
+  @RelationCount((post: Posts) => post.dislike)
+  public dislikeCount: number;
+
+  @Column()
+  @CreateDateColumn()
+  public created_at: Date;
+
+  @OneToMany(() => Comments, (comment) => comment.post)
+  public comment: Comments[];
+
+  @ManyToOne(() => Users, (user) => user.posts, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'users_id' })
+  public users: Users;
 }

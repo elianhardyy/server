@@ -16,10 +16,13 @@ import { ProfilesController } from './profiles.controller';
 import { Profile } from './profile';
 import { JwtModule } from '@nestjs/jwt/dist';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { Follows } from './follows';
+import { FollowService } from './follows.service';
+import { FollowController } from './follows.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users, Profile]),
+    TypeOrmModule.forFeature([Users, Profile, Follows]),
     PassportModule.register({ session: true }),
     JwtModule.register({
       secret: 'SECRET',
@@ -36,8 +39,9 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
     ProfilesService,
     JwtStrategy,
     JwtAuthGuard,
+    FollowService,
   ],
-  controllers: [UsersController, ProfilesController],
+  controllers: [UsersController, ProfilesController, FollowController],
   exports: [UsersService],
 })
 export class UsersModule {}

@@ -28,11 +28,11 @@ export class ProfilesController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './public/profile',
+        destination: './public/',
         filename: (req, file, callback) => {
           const unique = uuidv4();
           const ext: string = extname(file.originalname);
-          const filename = unique + ext;
+          const filename = 'profile/' + unique + ext;
           callback(null, filename);
         },
       }),

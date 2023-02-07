@@ -30,6 +30,7 @@ export class UsersService {
   public async getByName(firstname: string) {
     const userId = await this.usersRepository.findOne({
       where: { firstname: firstname },
+      relations: { profile: true },
     });
     return userId;
   }
