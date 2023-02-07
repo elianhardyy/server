@@ -17,12 +17,12 @@ export class Follows {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'follower_userId' })
-  public follower: number;
+  public follower: Users[];
 
   @ManyToOne(() => Users, (user) => user.followed, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'followed_userId' })
-  public followed: number;
+  public followed: Users[];
 }

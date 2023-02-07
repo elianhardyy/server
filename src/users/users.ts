@@ -60,8 +60,8 @@ export class Users {
   public comment: Comments[];
 
   @OneToMany(() => Follows, (comment) => comment.follower)
-  public follower: string;
+  public follower: Follows[];
 
   @OneToMany(() => Follows, (comment) => comment.followed)
-  public followed: string;
+  public followed: Follows[];
 }
