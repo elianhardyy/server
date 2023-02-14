@@ -35,12 +35,6 @@ export class Posts {
   @JoinTable()
   public dislike: Users[];
 
-  @RelationCount((post: Posts) => post.like)
-  public likeCount: number;
-
-  @RelationCount((post: Posts) => post.dislike)
-  public dislikeCount: number;
-
   @Column()
   @CreateDateColumn()
   public created_at: Date;

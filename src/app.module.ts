@@ -1,3 +1,4 @@
+import { Stories } from './posts/stories';
 import { UsersModule } from './users/users.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -34,7 +35,7 @@ import { Follows } from './users/follows';
         username: env.get<string>('DATABASE_USER'),
         password: env.get<string>('DATABASE_PASSWORD'),
         database: env.get<string>('DATABASE_NAME'),
-        entities: [Users, Password, Profile, Posts, Comments, Follows],
+        entities: [Users, Password, Profile, Posts, Comments, Follows, Stories],
         synchronize: true,
       }),
       inject: [ConfigService],

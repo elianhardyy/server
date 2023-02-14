@@ -2,8 +2,10 @@ import { Users } from './users';
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -17,12 +19,12 @@ export class Follows {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'follower_userId' })
-  public follower: Users[];
+  public follower: Users;
 
   @ManyToOne(() => Users, (user) => user.followed, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'followed_userId' })
-  public followed: Users[];
+  public followed: Users;
 }

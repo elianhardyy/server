@@ -25,7 +25,7 @@ export class Comments {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'users_id' })
-  public user: Users[];
+  public user: Users;
 
   @Column({ nullable: true })
   public comment: string;

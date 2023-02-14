@@ -34,6 +34,32 @@ export class UsersService {
     });
     return userId;
   }
+  public async userDetail(username: any, req: any) {
+    const userId = await this.usersRepository.findOne({
+      where: { id: req.user.id },
+      relations: { profile: true },
+    });
+    userId.username = username;
+    return userId;
+  }
+  public async editUser(
+    id: number,
+    firstname: string,
+    lastname: string,
+    email: string,
+    username: string,
+  ) {
+    const userId = await this.usersRepository.findOne({
+      where: { id: id },
+      relations: { profile: true },
+    });
+    userId.firstname = firstname;
+    userId.lastname = lastname;
+    userId.email = email;
+    userId.username = username;
+    const edit = this.usersRepository.save(userId);
+    return edit;
+  }
   public async update(email: string, password: any): Promise<any> {
     const pwupdate = await this.usersRepository.findOne({ where: { email } });
     pwupdate.password = password;

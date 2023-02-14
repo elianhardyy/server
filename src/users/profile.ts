@@ -14,8 +14,11 @@ export class Profile {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column()
+  @Column({ nullable: true })
   public photo: string;
+
+  @Column({ nullable: true })
+  public background: string;
 
   @OneToOne(() => Users, {
     cascade: true,

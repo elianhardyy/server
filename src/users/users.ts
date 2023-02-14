@@ -13,9 +13,10 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Comments } from '../posts/comments';
-import { Role } from 'src/roles/role.enum';
+import { Role } from '../roles/role.enum';
 import { Profile } from './profile';
 import { Follows } from './follows';
+import { Stories } from '../posts/stories';
 @Entity('users')
 export class Users {
   @PrimaryGeneratedColumn()
@@ -64,4 +65,7 @@ export class Users {
 
   @OneToMany(() => Follows, (comment) => comment.followed)
   public followed: Follows[];
+
+  @OneToMany(() => Stories, (story) => story.user)
+  public story: Stories[];
 }

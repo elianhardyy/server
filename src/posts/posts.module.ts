@@ -1,3 +1,4 @@
+import { Stories } from './stories';
 import { Users } from './../users/users';
 import { Profile } from './../users/profile';
 import { Module } from '@nestjs/common';
@@ -8,7 +9,9 @@ import { Posts } from './posts';
 import { Comments } from './comments';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Posts, Profile, Users, Comments])],
+  imports: [
+    TypeOrmModule.forFeature([Posts, Profile, Users, Comments, Stories]),
+  ],
   providers: [PostsService],
   controllers: [PostsController],
 })

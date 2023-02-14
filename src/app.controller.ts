@@ -7,6 +7,6 @@ export class AppController {
 
   @Get()
   public async hello() {
-    return 'hello';
+    console.log('Welcome To Social Meida API');
   }
 }
