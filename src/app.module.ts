@@ -1,3 +1,4 @@
+import { Connection } from './websocket/connection';
 import { Stories } from './posts/stories';
 import { UsersModule } from './users/users.module';
 import { Module } from '@nestjs/common';
@@ -19,6 +20,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
 import { Comments } from './posts/comments';
 import { Follows } from './users/follows';
+import { WebsocketModule } from './websocket/websocket.module';
+
 @Module({
   imports: [
     UsersModule,
@@ -35,12 +38,22 @@ import { Follows } from './users/follows';
         username: env.get<string>('DATABASE_USER'),
         password: env.get<string>('DATABASE_PASSWORD'),
         database: env.get<string>('DATABASE_NAME'),
-        entities: [Users, Password, Profile, Posts, Comments, Follows, Stories],
+        entities: [
+          Users,
+          Password,
+          Profile,
+          Posts,
+          Comments,
+          Follows,
+          Stories,
+          Connection,
+        ],
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
     PostsModule,
+    WebsocketModule,
     // ServeStaticModule.forRoot({
     //   rootPath: path.join(__dirname, '..', 'public'),
     // }),

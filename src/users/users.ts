@@ -17,6 +17,7 @@ import { Role } from '../roles/role.enum';
 import { Profile } from './profile';
 import { Follows } from './follows';
 import { Stories } from '../posts/stories';
+import { Connection } from '../websocket/connection';
 @Entity('users')
 export class Users {
   @PrimaryGeneratedColumn()
@@ -68,4 +69,7 @@ export class Users {
 
   @OneToMany(() => Stories, (story) => story.user)
   public story: Stories[];
+
+  @OneToMany(() => Connection, (connection) => connection.connectedUser)
+  public connection: Connection[];
 }

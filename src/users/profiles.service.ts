@@ -1,5 +1,5 @@
 import { Profile } from './profile';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as fs from 'fs';
@@ -18,13 +18,17 @@ export class ProfilesService {
     // newProfile.users = userid;
     return this.profileRepository.save(newProfile);
   }
-  public async bg(user: any, background: any) {
-    const getUsername = await this.profileRepository.findOne({
-      where: { users: { id: user } },
-      relations: { users: true },
-    });
-    getUsername.background = background;
-    return this.profileRepository.save(getUsername);
+  public async bg(req: any, background: any) {
+    try {
+      const getUsername = await this.profileRepository.findOne({
+        where: { users: { id: req.user.id } },
+        relations: { users: true },
+      });
+      getUsername.background = background;
+      return this.profileRepository.save(getUsername);
+    } catch (error) {
+      throw new BadRequestException('Upload your profile photo first');
+    }
   }
   public async updateProfile(req: any, photo: any) {
     //const profile: Profile = new Profile();
@@ -41,12 +45,12 @@ export class ProfilesService {
     if (photo) {
       image = photo; //file interceptor
       try {
-        fs.unlinkSync(`./public/${oldImage}`);
+        fs.unlinkSync(`./public/${file}`);
       } catch (error) {
         console.log(error);
       }
     } else {
-      image = oldImage;
+      image = file;
       //image = file;
     }
     findProfile.photo = image;

@@ -87,6 +87,7 @@ export class UsersService {
     };
     const token = this.jwtService.sign(payload);
     res.cookie('jwt', token, { httpOnly: true });
+    console.log('logged in');
     return res.json({ jwt: token });
   }
   public async logout(req: any) {
@@ -99,6 +100,7 @@ export class UsersService {
       if (err) {
         return err.message;
       } else {
+        console.log('logged out');
         return { msg: 'logged out' };
       }
     });

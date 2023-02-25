@@ -33,14 +33,14 @@ export class PasswordController {
     });
 
     return {
-      msg: 'Please check your email',
+      msg: token,
     };
   }
   @Post('/reset')
   public async reset(
     @Body('token') token: string,
-    @Body('password') password: PasswordValidator | any,
-    @Body('password_confirm') password_confirm: string,
+    @Body('password') password: any,
+    @Body('password_confirm') password_confirm: any,
   ) {
     if (password !== password_confirm) {
       throw new BadRequestException('Password do not match');
@@ -48,7 +48,6 @@ export class PasswordController {
     const pwreset: any = await this.passwordService.findOne(token);
     const email = pwreset.email;
     const user = await this.userService.findOne(email);
-
     if (!user) {
       throw new NotFoundException('User not found');
     }
