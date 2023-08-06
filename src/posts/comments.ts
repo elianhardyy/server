@@ -1,6 +1,7 @@
 import { Users } from './../users/users';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -29,4 +30,8 @@ export class Comments {
 
   @Column({ nullable: true })
   public comment: string;
+
+  @Column()
+  @CreateDateColumn()
+  public created_at: Date;
 }

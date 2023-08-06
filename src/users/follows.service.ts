@@ -38,7 +38,7 @@ export class FollowService {
   public async follower(req: any) {
     //follower didapatkan dari jumlah kolom follower
     //follower is taken from follower num rows in follower column
-    const haveRelation = await this.followRepository.count({
+    const haveRelation = await this.followRepository.find({
       where: { followed: { id: req.user.id } },
       relations: { followed: true },
     });
@@ -48,7 +48,7 @@ export class FollowService {
   public async following(req: any) {
     //following didapatkan dari jumlah seluruh kolom followed
     //following is taken from followed num rows in followed column
-    const getRelation = await this.followRepository.count({
+    const getRelation = await this.followRepository.find({
       where: { follower: { id: req.user.id } },
       relations: { follower: true },
     });

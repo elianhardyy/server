@@ -1,4 +1,4 @@
-import { Connection } from './websocket/connection';
+import { Messages } from './websocket/connection';
 import { Stories } from './posts/stories';
 import { UsersModule } from './users/users.module';
 import { Module } from '@nestjs/common';
@@ -21,6 +21,7 @@ import * as path from 'path';
 import { Comments } from './posts/comments';
 import { Follows } from './users/follows';
 import { WebsocketModule } from './websocket/websocket.module';
+import { Background } from './users/backgorund';
 
 @Module({
   imports: [
@@ -46,7 +47,8 @@ import { WebsocketModule } from './websocket/websocket.module';
           Comments,
           Follows,
           Stories,
-          Connection,
+          Messages,
+          Background,
         ],
         synchronize: true,
       }),

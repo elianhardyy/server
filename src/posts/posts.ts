@@ -18,7 +18,7 @@ export class Posts {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column()
+  @Column({ nullable: true })
   public caption: string;
 
   @Column({ nullable: true })

@@ -19,10 +19,11 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { Follows } from './follows';
 import { FollowService } from './follows.service';
 import { FollowController } from './follows.controller';
+import { Background } from './backgorund';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users, Profile, Follows]),
+    TypeOrmModule.forFeature([Users, Profile, Follows, Background]),
     PassportModule.register({ session: true }),
     JwtModule.register({
       secret: 'SECRET',

@@ -1,23 +1,21 @@
 import {
   Column,
   Entity,
-  Generated,
   JoinColumn,
   OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Users } from './users';
 
-@Entity('profiles')
-export class Profile {
+@Entity('background')
+export class Background {
   @PrimaryGeneratedColumn()
   public id: number;
 
   @Column({ nullable: true })
-  public photo: string;
+  public background: string;
 
-  @OneToOne(() => Users, (user) => user.profile, {
+  @OneToOne(() => Users, (user) => user.bg, {
     cascade: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

@@ -80,8 +80,8 @@ export class UsersController {
     return this.userService.dashboard(req);
   }
 
-  @UseGuards(RolesGuard, JwtAuthGuard)
-  @Roles(Role.Admin)
+  // @UseGuards(RolesGuard, JwtAuthGuard)
+  // @Roles(Role.Admin)
   @Get('/find/all/users')
   public async findUser(): Promise<Users[]> {
     return await this.userService.findAll();

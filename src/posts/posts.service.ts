@@ -31,33 +31,67 @@ export class PostsService {
 
     return this.postService.save(posts);
   }
-  public async postVideo(req: any, caption: string, video: any) {
+  public async postImage(req: any, caption: string, image: any) {
     const posts: Posts = new Posts();
     posts.users = req.user.id;
     posts.caption = caption;
-    posts.video = video;
+    posts.image = image;
     const newPostVideo = this.postService.create(posts);
+    console.log('Success upload image');
     return this.postService.save(newPostVideo);
   }
-  public async comment(id: number, comment: string, req: any) {
-    const byid = await this.postService.findOne({ where: { id: id } });
+  public async getPostImage(): Promise<Posts[]> {
+    const getAll = await this.postService.find({
+      relations: { users: { profile: true }, comment: true, like: true },
+      order: { created_at: 'DESC' },
+    });
+    return getAll;
+  }
+  public async comment(id: any, comment: string, req: any) {
+    const byid: any = await this.postService.findOne({ where: { id } });
     const comments: Comments = new Comments();
-    comments.post.id = byid.id;
-    comments.user.id = req.user.id;
+    comments.post = byid.id;
+    comments.user = req.user.id;
     comments.comment = comment;
     const newComments = this.commentService.create(comments);
     return this.commentService.save(newComments);
   }
+  public async allCommentsByPost(id: number) {
+    // const byid = await this.postService.find({
+    //   where: { id: id },
+    //   relations: { comment: true, users: true },
+    // });
+    const byid = await this.commentService.find({
+      where: { post: { id: id } },
+      relations: { user: { profile: true } },
+      order: { created_at: 'DESC' },
+    });
+    return byid;
+  }
+  public async deletePost(id: number) {
+    const postId = await this.postService.findOne({
+      where: { id },
+    });
+    return this.postService.remove(postId);
+  }
 
   public async like(req: any, id: number) {
     const insert = this.postService.query(
-      'INSERT INTO `posts_like_users`(`postsId`, `usersId`) VALUES (?,?)',
+      'INSERT INTO posts_like_users (`postsId`,`usersId`) VALUES (?,?)',
       [id, req.user.id],
     );
     const count = this.postService.query(
-      'SELECT COUNT(*) FROM `post_like_users`',
+      'SELECT COUNT(*) FROM `posts_like_users`',
     );
     return { count, insert };
+  }
+
+  public async allLikes(id: number) {
+    const likes = this.postService.query(
+      'SELECT * FROM posts_like_users WHERE `postsId`=?',
+      [id],
+    );
+    return likes;
   }
   public async dislike(req: any, id: number) {
     const insert = this.postService.query(
@@ -65,20 +99,20 @@ export class PostsService {
       [id, req.user.id],
     );
     const count = this.postService.query(
-      'SELECT COUNT(*) FROM `post_like_users`',
+      'SELECT COUNT(*) FROM `posts_dislike_users`',
     );
     return { count, insert };
   }
-  public async deleteLike(id: number) {
+  public async deleteLike(id: number, req: any) {
     const remove = this.postService.query(
-      'DELETE FROM `posts_like_users` WHERE id=?',
-      [id],
+      'DELETE FROM posts_like_users WHERE `postsId`=? AND `usersId`=?',
+      [id, req.user.id],
     );
     return remove;
   }
   public async deleteDislike(id: number) {
     const remove = this.postService.query(
-      'DELETE FROM `posts_dislike_users` WHERE id=?',
+      'DELETE FROM posts_dislike_users WHERE `postsId`=? AND `usersId`=?',
       [id],
     );
     return remove;

@@ -4,10 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as fs from 'fs';
 import { Request } from 'express';
+import { Background } from './backgorund';
 @Injectable()
 export class ProfilesService {
   constructor(
     @InjectRepository(Profile) private profileRepository: Repository<Profile>,
+    @InjectRepository(Background) private bgRepository: Repository<Background>,
   ) {}
   public async add(user: any, photo: any) {
     const profiles: Profile = new Profile();
@@ -20,12 +22,12 @@ export class ProfilesService {
   }
   public async bg(req: any, background: any) {
     try {
-      const getUsername = await this.profileRepository.findOne({
+      const getUsername = await this.bgRepository.findOne({
         where: { users: { id: req.user.id } },
         relations: { users: true },
       });
       getUsername.background = background;
-      return this.profileRepository.save(getUsername);
+      return this.bgRepository.save(getUsername);
     } catch (error) {
       throw new BadRequestException('Upload your profile photo first');
     }
@@ -74,14 +76,14 @@ export class ProfilesService {
     }
   }
   public async deleteBg(req: any) {
-    const findBg = await this.profileRepository.findOne({
+    const findBg = await this.bgRepository.findOne({
       where: { users: { id: req.user.id } },
       relations: { users: true },
     });
     const file = findBg.background;
     try {
       fs.unlinkSync(`./public/${file}`);
-      this.profileRepository.remove(findBg);
+      this.bgRepository.remove(findBg);
       return { msg: 'background profile deleted success' };
     } catch (error) {
       return { msg: error };

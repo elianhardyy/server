@@ -7,15 +7,15 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('connections')
-export class Connection {
+@Entity('messages')
+export class Messages {
   @PrimaryGeneratedColumn()
   public id: number;
 
   @Column()
-  public socketId: string;
+  public msg: string;
 
-  @ManyToOne(() => Users, (user) => user.connection)
+  @ManyToOne(() => Users, (user) => user.message)
   @JoinColumn()
-  public connectedUser: Users;
+  public user: Users;
 }

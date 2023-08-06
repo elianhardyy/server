@@ -1,3 +1,4 @@
+import { AuthAdapter } from './auth/auth.adapter';
 import { ConfigService } from '@nestjs/config/dist';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -6,9 +7,9 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { nestCsrf, CsrfFilter } from 'ncsrf';
 import * as process from 'process';
-import * as csurf from 'csurf';
+
 import * as cookieParser from 'cookie-parser';
-import { NextFunction, Request, Response } from 'express';
+
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as express from 'express';
@@ -27,7 +28,7 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.useGlobalFilters(new CsrfFilter());
   app.use(nestCsrf());
-  //app.useWebSocketAdapter();
+  app.useWebSocketAdapter(new AuthAdapter(app));
   app.use(
     session({
       secret: process.env.SECRET_KEY,

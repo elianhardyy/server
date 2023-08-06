@@ -22,10 +22,12 @@ export class UsersService {
     return this.usersRepository.save(newUser);
   }
   public findAll(): Promise<Users[]> {
-    return this.usersRepository.find();
+    return this.usersRepository.find({
+      relations: { profile: true, bg: true, follower: true, followed: true },
+    });
   }
-  public async findOne(data: any) {
-    return this.usersRepository.findOne({ where: { email: data } });
+  public async findOne(email: any) {
+    return this.usersRepository.findOne({ where: { email } });
   }
   public async getByName(firstname: string) {
     const userId = await this.usersRepository.findOne({
@@ -111,7 +113,7 @@ export class UsersService {
     // const data: any = this.jwtService.decode(cookie);
     const user = await this.usersRepository.findOne({
       where: { email: req.user.email },
-      relations: { profile: true },
+      relations: { profile: true, bg: true, follower: true, followed: true },
     });
     return user;
   }
